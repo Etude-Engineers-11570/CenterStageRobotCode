@@ -1,7 +1,7 @@
 # CenterStageRobotCode
 Team 11570 CenterStage robot code, this includes TeleOp,
-Autonomous, and Tuners for 2023. this includes the #https://github.com/Etude-Engineers-11570/OpenCVDetectionPipeline 
-as that was created earlier. 
+Autonomous, and Tuners for 2023. this includes the https://github.com/Etude-Engineers-11570/OpenCVDetectionPipeline 
+as that was created earlier than this. updates will be provided weekly and this isn't the finished version. 
 
 # Steps For Usage
 if you plan on using this, there are different libraries

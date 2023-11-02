@@ -1,6 +1,6 @@
 # CenterStageRobotCode
 Team 11570 CenterStage robot code, this includes TeleOp,
-Autonomous, and Tuners for 2023. this includes the https://github.com/Etude-Engineers-11570/OpenCVDetectionPipeline 
+Autonomous, and Tuners for 2023. this includes the [OpenCVDetectionPipeline](https://github.com/Etude-Engineers-11570/OpenCVDetectionPipeline) 
 as that was created earlier than this. updates will be provided weekly and this isn't the finished version. 
 
 # Steps For Usage
@@ -10,12 +10,12 @@ libraries on your project. Both Libraries have independent
 steps to install (thus, its not on here)
 
 Libraries used: 
-- https://github.com/OpenFTC/EasyOpenCV
-- https://github.com/acmerobotics/road-runner-quickstart
+- [EasyOpenCV](https://github.com/OpenFTC/EasyOpenCV)
+- [RoadRunner](https://github.com/acmerobotics/road-runner-quickstart)
 
 # Updates
 - Created (11/1/23)
 
 # Contributers
 Thanks to all Contributers!
-- https://github.com/SamualBrusky
+- [Samual Brusky](https://github.com/SamualBrusky)

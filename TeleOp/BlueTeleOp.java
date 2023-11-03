@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -55,6 +56,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class BlueTeleOp extends LinearOpMode {
 
+    public void MoveDriveTrain() {
+        double Vertical;
+        double Horizontal;
+        double Pivot;
+
+        Vertical = gamepad1.left_stick_x;
+        Horizontal = gamepad1.left_stick_y;
+        Pivot = gamepad1.right_stick_x;
+
+        robot.FR.setPower(-Pivot + (Vertical - Horizontal));
+        robot.BR.setPower(Pivot + (Vertical + Horizontal));
+        robot.FL.setPower(-Pivot + (-Vertical + Horizontal));
+        robot.BL.setPower(Pivot + (-Vertical - Horizontal));
+
+    }
+
     /* Declare OpMode members. */
     TeleOpHardware robot = new TeleOpHardware();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
@@ -74,6 +91,13 @@ public class BlueTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        robot.FL = hardwareMap.get(DcMotor.class, "FL");
+        robot.FR = hardwareMap.get(DcMotor.class, "FR");
+        robot.BL = hardwareMap.get(DcMotor.class, "BL");
+        robot.BR = hardwareMap.get(DcMotor.class, "BR");
+
+        robot.FL.setDirection(DcMotorSimple.Direction.REVERSE);
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -92,8 +116,10 @@ public class BlueTeleOp extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            MoveDriveTrain();
             //Always running:
             DrivePower = 1 / ( 1 + gamepad1.right_trigger * Multiplyer ); //lowest speed is 1/1+multiplyer, rn 1/4
+
 
            /* if(gamepad2.left_stick_y>0)
             {
@@ -126,20 +152,9 @@ public class BlueTeleOp extends LinearOpMode {
                 robot.Intake.setPower(0);
             } */
 
-            setDriveForMecanum(Mecanum.joystickToMotion(
-                    -gamepad1.left_stick_y, -gamepad1.right_stick_x,
-                    -gamepad1.left_stick_x, -gamepad1.right_stick_y));
-
 
         }
 
-    }
-    private void setDriveForMecanum ( Mecanum.Motion motion){
-        Mecanum.Wheels wheels = Mecanum.motionToWheels(motion);
-        robot.FL.setPower(wheels.frontLeft * DrivePower);
-        robot.FR.setPower(wheels.frontRight * DrivePower);
-        robot.BL.setPower(wheels.backLeft * DrivePower);
-        robot.BR.setPower(wheels.backRight * DrivePower);
     }
 
 

@@ -42,10 +42,17 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 //import com.arcrobotics.ftclib.controller.PIDController;
 //import com.arcrobotics.ftclib.hardware.SensorColor;
 
+import android.text.method.Touch;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.io.Serializable;
 //import com.arcrobotics.ftclib.controller.PIDFController;
 
 
@@ -68,18 +75,28 @@ public class TeleOpHardware
     public DcMotor BR = null;
 
     //Outtake
-   // public Servo Dropper = null;
+    public Servo Dropper = null;
+    public Servo Dropper_Turn = null;
 
     double Closed = 0;
-    double Open = 1;
+    double Open = 0.5;
+
+    double Straight = 0;
+    double Turn = 0.166666666667;
+
 
 
     //Scoring Pixels:
     //Intake:
-   // public DcMotor Intake = null;
+    public DcMotor Intake = null;
 
     //Lift:
-   // public DcMotor Lift = null;
+    public DcMotor Lift = null;
+
+    //Drone_Launcher:
+    public Servo Drone_Launcher = null;
+    //Sensors
+    //public TouchSensor Lift_Sensor;
 
 
     /* local OpMode members. */
@@ -105,15 +122,20 @@ public class TeleOpHardware
 
 
         //Outtake
-       // Dropper = hwMap.get(Servo.class, "Dropper");
+        Dropper = hwMap.get(Servo.class, "Dropper");
+        Dropper_Turn = hwMap.get(Servo.class, "Dropper_Turn");
         //Scoring Pixels:
         //Intake:
-       // Intake  = hwMap.get(DcMotor.class, "Intake");
+        Intake  = hwMap.get(DcMotor.class, "Intake");
 
         //Lift
-        //Lift = hwMap.get(DcMotor.class,"Lift");
+        Lift = hwMap.get(DcMotor.class,"Lift");
+
+        // Drone_Launcher
+        Drone_Launcher = hwMap.get(Servo.class, "Launcher");
 
         //Sensors:
+
 
         //LED
        // RevBlinkinLedDriver revBlinkinLedDriver = hwMap.get(RevBlinkinLedDriver.class,"LED");
@@ -126,8 +148,9 @@ public class TeleOpHardware
         FR.setDirection(DcMotor.Direction.REVERSE);
         BR.setDirection(DcMotor.Direction.REVERSE);
        // Intake.setDirection(DcMotor.Direction.REVERSE);
-       // Lift.setDirection(DcMotor.Direction.FORWARD);
+        Lift.setDirection(DcMotor.Direction.FORWARD);
         //Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 
 
@@ -137,10 +160,12 @@ public class TeleOpHardware
         FR.setPower(0);
         BR.setPower(0);
        // Intake.setPower(0);
-       // Lift.setPower(0);
+        Lift.setPower(0);
 
 
-       // Dropper.setPosition(Closed);
+        Dropper.setPosition(Closed);
+        Dropper_Turn.setPosition(Straight);
+
 
     }
 }

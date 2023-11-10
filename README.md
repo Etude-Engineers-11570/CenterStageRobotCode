@@ -16,6 +16,8 @@ Libraries used:
 # Updates
 - Created (11/1/23)
 - Added DriveConstants for RoadRunner (11/4/23)
+- Added Lift Sensor (11/10/23)
+- Added Turning for Outtake (11/10/23)
 
 # Contributers
 Thanks to all Contributers!

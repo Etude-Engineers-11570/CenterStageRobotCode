@@ -84,8 +84,8 @@ public class RedTeleOp extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 1.6875;     // For figuring circumference
 
     double liftspeed = 1;
-    double Multiplyer = 3;
-    double DrivePower = 1.0;
+   // double Multiplyer = 3;
+   // double DrivePower = 1.0;
     double IntakeSpeed = 1;
 
     @Override
@@ -118,10 +118,10 @@ public class RedTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             MoveDriveTrain();
             //Always running:
-            DrivePower = 1 / ( 1 + gamepad1.right_trigger * Multiplyer ); //lowest speed is 1/1+multiplyer, rn 1/4
+            //DrivePower = 1 / ( 1 + gamepad1.right_trigger * Multiplyer ); //lowest speed is 1/1+multiplyer, rn 1/4
 
 
-           /* if(gamepad2.left_stick_y>0)
+            if(gamepad2.left_stick_y>0)
             {
                 robot.Lift.setPower(0); //When we are all the way down we the intake automatically
                 LiftTargetHieght = robot.Lift.getCurrentPosition();
@@ -136,10 +136,10 @@ public class RedTeleOp extends LinearOpMode {
                 robot.Lift.setPower(0); //Stopped Lift
                 if(CustomLiftPID.Calculate(robot.Lift.getCurrentPosition(),LiftTargetHieght,0.02)>0) {
                     robot.Lift.setPower(CustomLiftPID.Calculate(robot.Lift.getCurrentPosition(), LiftTargetHieght, 0.02));
-                } */
+                }
 
             //OutTake
-           /* if (gamepad2.left_bumper) {
+            if (gamepad2.left_bumper) {
                 robot.Dropper.setPosition(robot.Open);
             }
             else {
@@ -150,13 +150,26 @@ public class RedTeleOp extends LinearOpMode {
             robot.Intake.setPower(gamepad1.right_stick_y * IntakeSpeed); }
             else {
                 robot.Intake.setPower(0);
-            } */
+            }
+            if (gamepad2.dpad_up) {
+                robot.Lift.setPower(1);
+                sleep(5000);
+                robot.Lift.setPower(0);
+            }
+            if (gamepad2.b && gamepad2.left_bumper && gamepad1.dpad_up && gamepad2.cross) {
+                robot.Dropper_Turn.setPosition(robot.Turn);
+            }
+            else
+            {
+                robot.Dropper_Turn.setPosition(robot.Straight);
+            }
 
+            
 
         }
 
     }
 
 
-}
+}}
 

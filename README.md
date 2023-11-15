@@ -10,8 +10,8 @@ libraries on your project. Both Libraries have independent
 steps to install (thus, its not on here)
 
 Libraries used: 
-- [EasyOpenCV](https://github.com/OpenFTC/EasyOpenCV)
-- [RoadRunner](https://github.com/acmerobotics/road-runner-quickstart)
+- [EasyOpenCV](https://github.com/OpenFTC/EasyOpenCV) 
+- [RoadRunner](https://github.com/acmerobotics/road-runner-quickstart) 1.0x
 
 # Updates
 - Created (11/1/23)

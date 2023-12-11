@@ -121,7 +121,7 @@ public class BlueTeleOp extends LinearOpMode {
             DrivePower = 1 / ( 1 + gamepad1.right_trigger * Multiplyer ); //lowest speed is 1/1+multiplyer, rn 1/4
 
 
-           /* if(gamepad2.left_stick_y>0)
+            if(gamepad2.left_stick_y>0)
             {
                 robot.Lift.setPower(0); //When we are all the way down we the intake automatically
                 LiftTargetHieght = robot.Lift.getCurrentPosition();
@@ -136,10 +136,10 @@ public class BlueTeleOp extends LinearOpMode {
                 robot.Lift.setPower(0); //Stopped Lift
                 if(CustomLiftPID.Calculate(robot.Lift.getCurrentPosition(),LiftTargetHieght,0.02)>0) {
                     robot.Lift.setPower(CustomLiftPID.Calculate(robot.Lift.getCurrentPosition(), LiftTargetHieght, 0.02));
-                } */
+                } 
 
             //OutTake
-           /* if (gamepad2.left_bumper) {
+            if (gamepad2.left_bumper) {
                 robot.Dropper.setPosition(robot.Open);
             }
             else {
@@ -150,7 +150,7 @@ public class BlueTeleOp extends LinearOpMode {
             robot.Intake.setPower(gamepad1.right_stick_y * IntakeSpeed); }
             else {
                 robot.Intake.setPower(0);
-            } */
+            } 
 
 
         }

@@ -18,9 +18,11 @@
                         .splineToConstantHeading(new Vector2d(50, -40), 0)
                         .strafeToConstantHeading(new Vector2d(50, -57.5))
 - Right
-                        .lineToYConstantHeading(-32)
+                       .lineToYConstantHeading(-32)
                         .turn(1.57)
+                        .lineToXConstantHeading(-33)
                         .waitSeconds(0.5)
+                        .lineToXConstantHeading(-38)
                         .turn(-1.57)
                         .lineToYConstantHeading(-44)
                         .splineToSplineHeading(new Pose2d(-25, -57.5, 0), 0)
@@ -37,5 +39,4 @@
                         .lineToXConstantHeading(30)
                         .splineToConstantHeading(new Vector2d(50, -40), 0)
                         .strafeToConstantHeading(new Vector2d(50, -57.5))
-- Left
 

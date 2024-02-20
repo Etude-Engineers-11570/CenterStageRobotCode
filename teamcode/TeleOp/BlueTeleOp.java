@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,27 +66,6 @@ public class BlueTeleOp extends LinearOpMode {
     public BlueTeleOp() {
     }
 
-   /* public void MoveDriveTrain() {
-        double Vertical;
-        double Horizontal;
-        double Pivot;
-
-        Vertical = gamepad1.left_stick_x;
-        Horizontal = gamepad1.left_stick_y;
-        Pivot = gamepad1.right_stick_x;
-
-        // robot.FR.setPower(-Pivot + (Vertical - Horizontal));
-        // robot.BR.setPower(Pivot + (Vertical + Horizontal));
-        // robot.FL.setPower(-Pivot + (-Vertical + Horizontal));
-        // robot.BL.setPower(Pivot + (-Vertical - Horizontal));
-
-        robot.leftFront.setPower(-Pivot + (-Vertical + Horizontal));
-        robot.leftBack.setPower(Pivot + (-Vertical - Horizontal));
-        robot.rightBack.setPower(Pivot + (Vertical + Horizontal));
-        robot.rightFront.setPower(-Pivot + (Vertical - Horizontal));
-
-    } */
-
     /* Declare OpMode members. */
     TeleOpHardware robot = new TeleOpHardware();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
@@ -98,8 +78,8 @@ public class BlueTeleOp extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 1.6875;     // For figuring circumference
 
     double liftspeed = 1;
-    double Multiplyer = 3;
-     double DrivePower = 1.0;
+    double Multiplyer = 2.5;
+     double DrivePower = 0.5;
     double IntakeSpeed = -1;
 
     @Override
@@ -109,6 +89,11 @@ public class BlueTeleOp extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        RevBlinkinLedDriver revBlinkinLedDriver1 = hardwareMap.get(RevBlinkinLedDriver.class,"LED2");
+        revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.CONFETTI);
+        RevBlinkinLedDriver revBlinkinLedDriver2 = hardwareMap.get(RevBlinkinLedDriver.class,"LED1");
+        revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.CONFETTI);
         // robot.FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // robot.FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // robot.BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -125,7 +110,10 @@ public class BlueTeleOp extends LinearOpMode {
         robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); */
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello Driver");
+        telemetry.addData("y", -gamepad1.left_stick_y);
+        telemetry.addData("x", gamepad1.left_stick_x);
+        telemetry.addData("z", -gamepad1.right_stick_x);
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -141,7 +129,6 @@ public class BlueTeleOp extends LinearOpMode {
             //Always running:
             DrivePower = 1 / ( 1 + gamepad1.right_trigger * Multiplyer ); //lowest speed is 1/1+multiplyer, rn 1/4
 
-
             if(gamepad2.left_stick_y>0)
             {
                 robot.Lift1.setPower(0); //When we are all the way down we the intake automatically
@@ -154,8 +141,14 @@ public class BlueTeleOp extends LinearOpMode {
                 LiftTargetHieght = robot.Lift1.getCurrentPosition();
                 robot.Lift2.setPower(-gamepad2.left_stick_y * liftspeed); //Lifting
                 LiftTargetHieght = robot.Lift2.getCurrentPosition();
-                telemetry.addData("Lifting", -gamepad2.left_stick_y);
-                telemetry.update();
+//                telemetry.addData("Lifting", -gamepad2.left_stick_y);
+//                telemetry.addData("Lift1 target Height:", 560);
+//                telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+//                telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
+//                telemetry.addData("Lift2 target Height:", 560);
+//                telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+//                telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
+//                telemetry.update();
 
             }
 
@@ -165,14 +158,41 @@ public class BlueTeleOp extends LinearOpMode {
                 robot.Lift1.setPower(0); //Stopped Lift
                 if(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(),LiftTargetHieght,0.02)>0) {
                     robot.Lift1.setPower(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), LiftTargetHieght, 0.02));
+//                    telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+//                    telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
+//                    telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+//                    telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
+//                    telemetry.update();
                 }
                 if(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(),LiftTargetHieght,0.02)>0) {
                     robot.Lift2.setPower(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), LiftTargetHieght, 0.02));
+//                    telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+//                    telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
+//                    telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+//                    telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
+//                    telemetry.update();
                 }
-                /*if (LiftTargetHieght > 16000) {
+                if (LiftTargetHieght > 2500) {
                 robot.Lift1.setPower(0);
                 robot.Lift2.setPower(0);
-            } */
+              }
+                if (LiftTargetHieght < 250) {
+                   // robot.Lift1.setPower(0);
+                   // robot.Lift2.setPower(0);
+                    CustomLiftPID.KP = 0;
+                    CustomLiftPID.KI = 0;
+                    CustomLiftPID.KD = 0;
+                    CustomLiftPID.KG = 0;
+                    CustomLiftPID.IntRange = 0;
+                }
+                else {
+                    CustomLiftPID.KP = 0.0005;
+                    CustomLiftPID.KI = 0;
+                    CustomLiftPID.KD = 0;
+                    CustomLiftPID.KG = 0;
+                    CustomLiftPID.IntRange = 0;
+
+                }
 
 
                 //OutTake
@@ -181,6 +201,15 @@ public class BlueTeleOp extends LinearOpMode {
                 }
                 else {
                     robot.Dropper.setPosition(robot.Closed);
+                }
+
+                if (gamepad2.dpad_down) {
+                    gamepad2.isRumbling();
+                    robot.Claw.setPosition(robot.ClawTurnGrab);
+                }
+                else if (gamepad2.dpad_up) {
+                    gamepad2.isRumbling();
+                    robot.Claw.setPosition(robot.ClawTurnStart);
                 }
 
                 //Intake
@@ -215,79 +244,84 @@ public class BlueTeleOp extends LinearOpMode {
                     robot.Launcher.setPosition(robot.NO_LAUNCH);
                 }
 
-               /* telemetry.addData("Red1", robot.OutTakeDetector1.red());
+                 if (robot.Lift_Sensor.isPressed()) {
+                    robot.Lift1.setPower(0);
+                    robot.Lift2.setPower(0);
+                }
+
+                telemetry.addData("Red1", robot.OutTakeDetector1.red());
                 telemetry.addData("Green1", robot.OutTakeDetector1.green());
                 telemetry.addData("Blue1", robot.OutTakeDetector1.blue());
                 telemetry.addData("Red2", robot.OutTakeDetector2.red());
                 telemetry.addData("Green2", robot.OutTakeDetector2.green());
                 telemetry.addData("Blue2", robot.OutTakeDetector2.blue());
-                telemetry.update(); */
+                telemetry.update();
 
-             /*   boolean isWhiteLeft = robot.OutTakeDetector1.red() > 200 && robot.OutTakeDetector1.blue() > 200 && robot.OutTakeDetector1.green() > 200;
-                boolean isYellowLeft = robot.OutTakeDetector1.red() > 200 && robot.OutTakeDetector1.blue() > 200 && robot.OutTakeDetector1.green() < 50;
-                boolean isGreenLeft = robot.OutTakeDetector1.red() < 50 && robot.OutTakeDetector1.blue() < 50 && robot.OutTakeDetector1.green() > 200;
-                boolean isNothingLeft = robot.OutTakeDetector1.red() > 200 && robot.OutTakeDetector1.blue() < 50 && robot.OutTakeDetector1.green() < 50;
-                boolean isPurpleLeft = robot.OutTakeDetector1.red() > 200 && robot.OutTakeDetector1.blue() < 50 && robot.OutTakeDetector1.green() < 50;
-
-                boolean isWhiteRight = robot.OutTakeDetector2.red() > 200 && robot.OutTakeDetector2.blue() > 200 && robot.OutTakeDetector2.green() > 200;
-                boolean isYellowRight = robot.OutTakeDetector2.red() > 200 && robot.OutTakeDetector2.blue() > 200 && robot.OutTakeDetector2.green() < 50;
-                boolean isGreenRight = robot.OutTakeDetector2.red() < 50 && robot.OutTakeDetector2.blue() < 50 && robot.OutTakeDetector2.green() > 200;
-                boolean isNothingRight = robot.OutTakeDetector2.red() > 200 && robot.OutTakeDetector2.blue() < 50 && robot.OutTakeDetector2.green() < 50;
-                boolean isPurpleRight = robot.OutTakeDetector2.red() > 150 && robot.OutTakeDetector2.blue() > 150 && robot.OutTakeDetector2.green() < 100;
-
-
-                    if (isWhiteLeft) {
-                        revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
-
-
-
-                    }
-                    if (isWhiteRight) {
-                        revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
-
-
-                    }
+//                telemetry.addData("Lifting", -gamepad2.left_stick_y);
+//                telemetry.addData("Lift1 target Height:", 560);
+//                telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+//                telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
+//                telemetry.addData("Lift2 target Height:", 560);
+//                telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+//                telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
+//                telemetry.update();
+//                boolean isLeft = robot.OutTakeDetector2.red() > 500 && robot.OutTakeDetector2.blue() > 500 && robot.OutTakeDetector2.green() > 500;
+//                boolean isNothing = robot.OutTakeDetector1.red() > 400 && robot.OutTakeDetector1.blue() < 300 && robot.OutTakeDetector1.green() < 300 && robot.OutTakeDetector2.red() > 400 && robot.OutTakeDetector2.blue() < 300 && robot.OutTakeDetector2.green() < 300;
+//                boolean isRight = robot.OutTakeDetector1.red() > 1000 && robot.OutTakeDetector1.blue() > 1000 && robot.OutTakeDetector1.green() > 1000;
+                boolean isYellowLeft = robot.OutTakeDetector1.red() > 1750 && robot.OutTakeDetector1.blue() > 500 && robot.OutTakeDetector1.green() > 2000 && robot.OutTakeDetector1.red() < 2000 && robot.OutTakeDetector1.blue() < 1000 && robot.OutTakeDetector1.green() < 3000;
+                boolean isPurpleLeft = robot.OutTakeDetector1.red() > 1250 && robot.OutTakeDetector1.blue() > 2500 && robot.OutTakeDetector1.green() > 2000 && robot.OutTakeDetector1.red() < 1750 && robot.OutTakeDetector1.blue() < 3000 && robot.OutTakeDetector1.green() < 2200;
+                boolean isGreenLeft = robot.OutTakeDetector1.red() > 250 && robot.OutTakeDetector1.blue() > 500 && robot.OutTakeDetector1.green() > 1500 && robot.OutTakeDetector1.red() < 750 && robot.OutTakeDetector1.blue() < 1000 && robot.OutTakeDetector1.green() < 2000;
+                boolean isWhiteLeft = robot.OutTakeDetector1.red() > 2750 && robot.OutTakeDetector1.blue() > 4500 && robot.OutTakeDetector1.green() > 5250 && robot.OutTakeDetector1.red() < 4000 && robot.OutTakeDetector1.blue() < 5500 && robot.OutTakeDetector1.green() < 6000;
+                boolean isYellowRight = robot.OutTakeDetector1.red() > 1750 && robot.OutTakeDetector1.blue() > 500 && robot.OutTakeDetector1.green() > 2000 && robot.OutTakeDetector1.red() < 2000 && robot.OutTakeDetector1.blue() < 1000 && robot.OutTakeDetector1.green() < 3000;
+                boolean isPurpleRight = robot.OutTakeDetector2.red() > 1250 && robot.OutTakeDetector2.blue() > 2500 && robot.OutTakeDetector2.green() > 2000  && robot.OutTakeDetector2.red() < 1750 && robot.OutTakeDetector2.blue() < 3000 && robot.OutTakeDetector2.green() < 2200;
+                boolean isGreenRight = robot.OutTakeDetector2.red() > 250 && robot.OutTakeDetector2.blue() > 500 && robot.OutTakeDetector2.green() > 1500 && robot.OutTakeDetector2.red() < 750 && robot.OutTakeDetector2.blue() < 1000 && robot.OutTakeDetector2.green() < 2000;
+                boolean isWhiteRight = robot.OutTakeDetector2.red() > 2750 && robot.OutTakeDetector2.blue() > 4500 && robot.OutTakeDetector2.green() > 5250 && robot.OutTakeDetector2.red() < 3250 && robot.OutTakeDetector2.blue() < 5500 && robot.OutTakeDetector2.green() < 6000;
                     if (isYellowLeft) {
                         revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
-
-
                     }
-                    if (isYellowRight) {
-                        revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
-
-
-                    }
-                    if (isGreenLeft) {
-                        revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-
-
-                    }
-                    if (isGreenRight) {
-                        revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-
-
-                    }
-                    if (isPurpleLeft) {
+                    else if (isPurpleLeft) {
                         revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
-
-
                     }
-                    if (isPurpleRight) {
-                        revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
-
-
+                    else if (isGreenLeft) {
+                         revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
                     }
-                   if (isNothingLeft) {
+                    else if (isWhiteLeft) {
+                        revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+                    }
+                    else {
                         revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
-
-
-
                     }
-                    if (isNothingRight) {
-                        revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
 
+                if (isYellowRight) {
+                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+                }
+                else if (isPurpleRight) {
+                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+                }
+                else if (isGreenRight) {
+                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+                }
+                else if (isWhiteRight) {
+                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+                }
+                else {
+                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+                }
 
-                    } */
+//                if (isRight) {
+//                    revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE);
+//                }
+//                else if (isLeft) {
+//                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE);
+//                }
+//                else if (isLeft && isRight) {
+//                    revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+//                    revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+//                }
+//                else {
+//                  revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+//                  revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+//            }
 
 
             }

@@ -50,7 +50,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //import com.arcrobotics.ftclib.controller.PIDFController;
 
-
 /**
  * This is NOT an opmode.
  *
@@ -67,6 +66,8 @@ public class AutoHardware
     public Servo Dropper_Turn1 = null;
     public Servo Dropper_Turn2 = null;
 
+    public Servo PixelClaw = null;
+
     double Closed = 0;
     double Open = 0.1;
     double Straight1 = 0.2;
@@ -76,8 +77,11 @@ public class AutoHardware
 
     public Servo Claw;
 
-    double ClawTurnGrab = 0.0645;
+    double ClawTurnGrab = 0.37;
     double ClawTurnStart = 0.01;
+
+    double PixelTurn = 0.45;
+    double PixelStart = 0;
 
     double Turn1Degrees = Turn1 * 300.0;
     double Turn2Degrees = Turn2 * 300.0;
@@ -124,6 +128,7 @@ public class AutoHardware
         Dropper_Turn1 = hwMap.get(Servo.class, "Dropper_Turn1");
         Dropper_Turn2 = hwMap.get(Servo.class, "Dropper_Turn2");
 
+        PixelClaw = hwMap.get(Servo.class, "PixelClaw");
         Claw = hwMap.get(Servo.class, "Claw");
         //Scoring Pixels:
         //Intake:
@@ -146,7 +151,7 @@ public class AutoHardware
         Intake.setDirection(DcMotor.Direction.REVERSE);
         Lift1.setDirection(DcMotor.Direction.FORWARD);
         Lift2.setDirection(DcMotor.Direction.REVERSE);
-       // Lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        // Lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Dropper_Turn2.setDirection(Servo.Direction.REVERSE);
 
@@ -164,6 +169,7 @@ public class AutoHardware
         Dropper_Turn2.setPosition(Straight2);
 
         Claw.setPosition(ClawTurnStart);
+        PixelClaw.setPosition(PixelStart);
 
         // Sensors
 

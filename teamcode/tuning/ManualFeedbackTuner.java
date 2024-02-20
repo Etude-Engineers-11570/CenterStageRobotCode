@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.TwoDeadWheelLocalizer;
 
 public final class ManualFeedbackTuner extends LinearOpMode {
-    public static double DISTANCE = 64;
+    public static double DISTANCE = 32;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,8 +31,13 @@ public final class ManualFeedbackTuner extends LinearOpMode {
             while (opModeIsActive()) {
                 Actions.runBlocking(
                     drive.actionBuilder(new Pose2d(0, 0, 0))
-                            .lineToY(DISTANCE)
-                            .lineToY(0)
+//                            .splineToSplineHeading(new Pose2d(40, -20, Math.PI/2), 0)
+//                            .waitSeconds(1)
+//                            .splineToSplineHeading(new Pose2d(0, 0, 0), 0)
+                            .waitSeconds(1)
+                            .lineToX(DISTANCE)
+                            .waitSeconds(1)
+                            .lineToX(0)
                             .build());
             }
         } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {

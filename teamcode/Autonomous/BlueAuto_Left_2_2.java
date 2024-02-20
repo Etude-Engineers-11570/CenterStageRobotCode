@@ -40,7 +40,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(group = "drive")
 
-public class RedAuto_Right extends LinearOpMode {
+public class BlueAuto_Left_2_2 extends LinearOpMode {
 
     double LiftTargetHieght = 0;
     ElapsedTime Lifttimer = new ElapsedTime();
@@ -55,8 +55,8 @@ public class RedAuto_Right extends LinearOpMode {
 
     //Webcam and detection initialization:
     OpenCvWebcam webcam;
-    SkystoneDetermination_RedRight pipeline;
-    SkystoneDetermination_RedRight.SkystonePosition snapshotAnalysis = SkystoneDetermination_RedRight.SkystonePosition.RIGHT; // default
+    SkystoneDetermination_BlueLeft pipeline;
+    SkystoneDetermination_BlueLeft.SkystonePosition snapshotAnalysis = SkystoneDetermination_BlueLeft.SkystonePosition.RIGHT; // default
     // This enum defines our "state"
     // This is essentially just defines the possible steps our program will take
 
@@ -76,7 +76,7 @@ public class RedAuto_Right extends LinearOpMode {
             //Detection Setup:
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-            pipeline = new SkystoneDetermination_RedRight();
+            pipeline = new SkystoneDetermination_BlueLeft();
             webcam.setPipeline(pipeline);
 
             webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -126,25 +126,25 @@ public class RedAuto_Right extends LinearOpMode {
             snapshotAnalysis = pipeline.getAnalysis();
             switch (snapshotAnalysis) {
                 case LEFT: {
-                    robot.Claw.setPosition(robot.ClawTurnGrab);
+                    //robot.Claw.setPosition(robot.ClawTurnGrab);
                     Actions.runBlocking(
                             drive.actionBuilder(new Pose2d(15, -60, -Math.PI/2))
                                     .waitSeconds(1)
                                     .lineToYConstantHeading(-45)
                                     .turn(Math.PI/2)
-                                    .lineToXConstantHeading(14)
+                                    .lineToXConstantHeading(20)
                                     .build()
                     );
 
-                    robot.Claw.setPosition(robot.ClawTurnStart);
+                    //robot.Claw.setPosition(robot.ClawTurnStart);
 
 
                     Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(14, -45, 0))
+                            drive.actionBuilder(new Pose2d(20, -45, 0))
                                     .lineToXConstantHeading(25)
                                     .turn(-Math.PI/2)
-                                    .lineToYConstantHeading(-55)
-                                    .splineToSplineHeading(new Pose2d(48, -36, Math.PI), -Math.PI/2)
+                                    .lineToYConstantHeading(-52.5)
+                                    .splineToSplineHeading(new Pose2d(-5, -42, 0), Math.PI/2)
                                     .build()
                     );
 
@@ -177,113 +177,139 @@ public class RedAuto_Right extends LinearOpMode {
                     sleep(1500);
                     robot.Dropper_Turn1.setPosition(Straight1);
                     robot.Dropper_Turn2.setPosition(Straight2);
-                    sleep(250);
+                    //sleep(1000);
                     robot.Dropper.setPosition(Closed);
 
-                    if (robot.Lift1.getCurrentPosition() < (20) && robot.Lift2.getCurrentPosition() < (20)) {
+                    if (robot.Lift1.getCurrentPosition()>0 && robot.Lift2.getCurrentPosition()>0) { //Runs the lift to the right hight
                         robot.Lift1.setPower(0);
                         robot.Lift2.setPower(0);
+                        if(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(),0,0.2)>0 && CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(),0,0.2)>0) {
+                            robot.Lift1.setPower(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 0, 0.2));
+                            robot.Lift2.setPower(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 0, 0.2));
+                        }
+                        Lifttimer.reset();
+                        telemetry.addData("Lift1 target Height:", 0);
+                        telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 0, 0.2));
+                        telemetry.addData("Lift2 target Height:", 0);
+                        telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 0, 0.2));
+                        telemetry.update();
                     }
-                    else {
-                        robot.Lift1.setPower(-0.5);
-                        robot.Lift2.setPower(-0.5);
+                    else if (robot.Lift1.getCurrentPosition()>0 && robot.Lift2.getCurrentPosition()>0) { //Runs the lift to the right hight
+                        telemetry.addData("Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.update();
+                        robot.Lift1.setPower(-1);
+                        robot.Lift2.setPower(-1);
                     }
-
 
                     Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(48, -36, Math.PI))
-                                    .lineToXConstantHeading(42)
-                                    .strafeToConstantHeading(new Vector2d(42, -58))
-                                    .build());
+                            drive.actionBuilder(new Pose2d(-10, -38, 0))
+                                    .strafeToConstantHeading(new Vector2d(-0, -55))
+                                    .build()
+                    );
                     break;
                 }
                 case CENTER: {
+                    //robot.Claw.setPosition(robot.ClawTurnGrab);
+                    Actions.runBlocking(
+                            drive.actionBuilder(new Pose2d(15, -60, -Math.PI/2))
+                                    .waitSeconds(1)
+                                    .lineToYConstantHeading(-41)
+                                    .build()
+                    );
 
-                    robot.Claw.setPosition(robot.ClawTurnGrab);
+                    //robot.Claw.setPosition(robot.ClawTurnStart);
 
+
+                    Actions.runBlocking(
+                            drive.actionBuilder(new Pose2d(15, -40, -Math.PI/2))
+                                    .lineToYConstantHeading(-52.5)
+                                    .splineToSplineHeading(new Pose2d(-10, -39, 0), Math.PI/2)
+                                    .build()
+                    );
+
+                    if (robot.Lift1.getCurrentPosition()<560 && robot.Lift2.getCurrentPosition()<560) { //Runs the lift to the right hight
+                        robot.Lift1.setPower(0);
+                        robot.Lift2.setPower(0);
+                        if(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(),560,0.2)>0 && CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(),560,0.2)>0) {
+                            robot.Lift1.setPower(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
+                            robot.Lift2.setPower(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
+                        }
+                        Lifttimer.reset();
+                        telemetry.addData("Lift1 target Height:", 560);
+                        telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
+                        telemetry.addData("Lift2 target Height:", 560);
+                        telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
+                        telemetry.update();
+                    }
+                    else if (robot.Lift1.getCurrentPosition()<560 && robot.Lift2.getCurrentPosition()<560) { //Runs the lift to the right hight
+                        telemetry.addData("Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.update();
+                        robot.Lift1.setPower(1);
+                        robot.Lift2.setPower(1);
+                    }
+                    robot.Dropper_Turn1.setPosition(Turn1);
+                    robot.Dropper_Turn2.setPosition(Turn2);
+                    sleep(500);
+                    robot.Dropper.setPosition(Open);
+                    sleep(1500);
+                    robot.Dropper_Turn1.setPosition(Straight1);
+                    robot.Dropper_Turn2.setPosition(Straight2);
+                    //sleep(1000);
+                    robot.Dropper.setPosition(Closed);
+
+                    if (robot.Lift1.getCurrentPosition()>0 && robot.Lift2.getCurrentPosition()>0) { //Runs the lift to the right hight
+                        robot.Lift1.setPower(0);
+                        robot.Lift2.setPower(0);
+                        if(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(),0,0.2)>0 && CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(),0,0.2)>0) {
+                            robot.Lift1.setPower(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 0, 0.2));
+                            robot.Lift2.setPower(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 0, 0.2));
+                        }
+                        Lifttimer.reset();
+                        telemetry.addData("Lift1 target Height:", 0);
+                        telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 0, 0.2));
+                        telemetry.addData("Lift2 target Height:", 0);
+                        telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 0, 0.2));
+                        telemetry.update();
+                    }
+                    else if (robot.Lift1.getCurrentPosition()>0 && robot.Lift2.getCurrentPosition()>0) { //Runs the lift to the right hight
+                        telemetry.addData("Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.update();
+                        robot.Lift1.setPower(-1);
+                        robot.Lift2.setPower(-1);
+                    }
+
+                    Actions.runBlocking(
+                            drive.actionBuilder(new Pose2d(-10, -38, 0))
+                                    .strafeToConstantHeading(new Vector2d(-0, -55))
+                                    .build()
+                    );
+                    break;
+                }
+                case RIGHT: {
+                    //robot.Claw.setPosition(robot.ClawTurnGrab);
                     Actions.runBlocking(
                             drive.actionBuilder(new Pose2d(15, -60, -Math.PI/2))
                                     .waitSeconds(1)
                                     .lineToYConstantHeading(-40)
-                                    .strafeToConstantHeading(new Vector2d(9.5, -41))
+                                    .turn(-Math.PI/2)
+                                    .lineToXConstantHeading(25)
                                     .build()
                     );
 
-                    robot.Claw.setPosition(robot.ClawTurnStart);
+                    //robot.Claw.setPosition(robot.ClawTurnStart);
 
 
                     Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(9.5, -41, -Math.PI/2))
-                                    .strafeToConstantHeading(new Vector2d(15, -50))
-                                    .splineToSplineHeading(new Pose2d(45, -40, Math.PI), -Math.PI/2)
-                                    .build()
-                    );
-
-                    if (robot.Lift1.getCurrentPosition()<560 && robot.Lift2.getCurrentPosition()<560) { //Runs the lift to the right hight
-                        robot.Lift1.setPower(0);
-                        robot.Lift2.setPower(0);
-                        if(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(),560,0.2)>0 && CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(),560,0.2)>0) {
-                            robot.Lift1.setPower(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
-                            robot.Lift2.setPower(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
-                        }
-                        Lifttimer.reset();
-                        telemetry.addData("Lift1 target Height:", 560);
-                        telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
-                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 560, 0.2));
-                        telemetry.addData("Lift2 target Height:", 560);
-                        telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
-                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 560, 0.2));
-                        telemetry.update();
-                    }
-                    else if (robot.Lift1.getCurrentPosition()<560 && robot.Lift2.getCurrentPosition()<560) { //Runs the lift to the right hight
-                        telemetry.addData("Height:", robot.Lift1.getCurrentPosition());
-                        telemetry.update();
-                        robot.Lift1.setPower(1);
-                        robot.Lift2.setPower(1);
-                    }
-                    robot.Dropper_Turn1.setPosition(Turn1);
-                    robot.Dropper_Turn2.setPosition(Turn2);
-                    sleep(500);
-                    robot.Dropper.setPosition(Open);
-                    sleep(1500);
-                    robot.Dropper_Turn1.setPosition(Straight1);
-                    robot.Dropper_Turn2.setPosition(Straight2);
-                    sleep(250);
-                    robot.Dropper.setPosition(Closed);
-
-                    if (robot.Lift1.getCurrentPosition() < (20) && robot.Lift2.getCurrentPosition() < (20)) {
-                        robot.Lift1.setPower(0);
-                        robot.Lift2.setPower(0);
-                    }
-                    else {
-                        robot.Lift1.setPower(-0.5);
-                        robot.Lift2.setPower(-0.5);
-                    }
-
-                    Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(45, -39, Math.PI))
-                                    .lineToXConstantHeading(40)
-                                    .strafeToConstantHeading(new Vector2d(40, -58))
-                                    .build());
-                    break;
-                }
-                case RIGHT: {
-
-                    robot.Claw.setPosition(robot.ClawTurnGrab);
-
-                    Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(15, -60, -Math.PI/2))
-                                    .waitSeconds(0.75)
-                                    .strafeToConstantHeading(new Vector2d(16, -47.5))
-                                    .build()
-                    );
-
-                    robot.Claw.setPosition(robot.ClawTurnStart);
-
-                    Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(16, -47.5, -Math.PI/2))
-                                    .lineToYConstantHeading(-50)
-                                    .splineToSplineHeading(new Pose2d(45, -42, Math.PI), -Math.PI/2)
+                            drive.actionBuilder(new Pose2d(25, -40, -Math.PI))
+                                    .lineToXConstantHeading(20)
+                                    .strafeToConstantHeading(new Vector2d(20, -52.5))
+                                    .splineToSplineHeading(new Pose2d(2, -32, 0), -Math.PI/2)
                                     .build()
                     );
 
@@ -316,23 +342,41 @@ public class RedAuto_Right extends LinearOpMode {
                     sleep(1500);
                     robot.Dropper_Turn1.setPosition(Straight1);
                     robot.Dropper_Turn2.setPosition(Straight2);
+                    //sleep(1000);
                     robot.Dropper.setPosition(Closed);
 
-                    if (robot.Lift1.getCurrentPosition() < (20) && robot.Lift2.getCurrentPosition() < (20)) {
+                    if (robot.Lift1.getCurrentPosition()>0 && robot.Lift2.getCurrentPosition()>0) { //Runs the lift to the right hight
                         robot.Lift1.setPower(0);
                         robot.Lift2.setPower(0);
+                        if(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(),0,0.2)>0 && CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(),0,0.2)>0) {
+                            robot.Lift1.setPower(CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 0, 0.2));
+                            robot.Lift2.setPower(CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 0, 0.2));
+                        }
+                        Lifttimer.reset();
+                        telemetry.addData("Lift1 target Height:", 0);
+                        telemetry.addData("Lift1 Current Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift1.getCurrentPosition(), 0, 0.2));
+                        telemetry.addData("Lift2 target Height:", 0);
+                        telemetry.addData("Lift2 Current Height:", robot.Lift2.getCurrentPosition());
+                        telemetry.addData("Lift PID value:", CustomLiftPID.Calculate(robot.Lift2.getCurrentPosition(), 0, 0.2));
+                        telemetry.update();
                     }
-                    else {
-                        robot.Lift1.setPower(-0.5);
-                        robot.Lift2.setPower(-0.5);
+                    else if (robot.Lift1.getCurrentPosition()>0 && robot.Lift2.getCurrentPosition()>0) { //Runs the lift to the right hight
+                        telemetry.addData("Height:", robot.Lift1.getCurrentPosition());
+                        telemetry.update();
+                        robot.Lift1.setPower(-1);
+                        robot.Lift2.setPower(-1);
                     }
 
                     Actions.runBlocking(
-                            drive.actionBuilder(new Pose2d(50, -44, Math.PI))
-                                    .lineToXConstantHeading(42)
-                                    .strafeToConstantHeading(new Vector2d(42, -59))
-                                    .build());
+                            drive.actionBuilder(new Pose2d(2, -32, 0))
+                                    .strafeToConstantHeading(new Vector2d(5, -55))
+                                    .build()
+                    );
+
                     break;
+
+
 
                 }}
             if (isStopRequested()) return;

@@ -99,6 +99,11 @@ public class TeleOpHardware
 
     public Servo Launcher = null;
 
+    public Servo Claw;
+
+    double ClawTurnGrab = 0.38;
+    double ClawTurnStart = 0.01;
+
 
 
 
@@ -159,15 +164,9 @@ public class TeleOpHardware
         //AirPlane Launcher
         Launcher = hwMap.get(Servo.class, "Launcher");
 
-
+        Claw = hwMap.get(Servo.class, "Claw");
         // Drone_Launcher
        // Drone_Launcher = hwMap.get(Servo.class, "Launcher");
-
-        //LED
-       /* RevBlinkinLedDriver revBlinkinLedDriver1 = hwMap.get(RevBlinkinLedDriver.class,"LED1");
-        revBlinkinLedDriver1.setPattern(RevBlinkinLedDriver.BlinkinPattern.CONFETTI); */
-       // RevBlinkinLedDriver revBlinkinLedDriver2 = hwMap.get(RevBlinkinLedDriver.class,"LED2");
-       // revBlinkinLedDriver2.setPattern(RevBlinkinLedDriver.BlinkinPattern.CONFETTI);
 
         //Initialize Robot:
 
@@ -186,6 +185,8 @@ public class TeleOpHardware
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        Claw.setPosition(ClawTurnStart);
 
 
 
@@ -215,14 +216,6 @@ public class TeleOpHardware
         OutTakeDetector2 = hwMap.get(ColorSensor.class, "OutTakeDetector2");
     }
 
-
-       // double red1 = OutTakeDetector1.red();
-       // double green1 = OutTakeDetector1.green();
-        // double blue1 = OutTakeDetector1.blue();
-
-       /* int red2 = OutTakeDetector2.red();
-        int green2 = OutTakeDetector2.green();
-        int blue2 = OutTakeDetector2.blue(); */
 
         // Do something with the color values
 
